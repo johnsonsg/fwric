@@ -1,54 +1,64 @@
 "use client";
 
+import NextLink from "next/link";
 import { createTheme } from "@mui/material/styles";
 
+const DEEP_SEA = "#0E4A5C";
+const CORAL = "#FF7A59";
+const INK = "#0B1C24";
+const MIST = "#F3F7F8";
+const WHITE = "#FFFFFF";
+
+const headingFont = "var(--font-heading), system-ui, sans-serif";
+
 export const theme = createTheme({
+  cssVariables: true,
   palette: {
-    mode: "dark",
-    primary: {
-      main: "#22d3ee",
-      dark: "#0891b2",
-      contrastText: "#082f49",
-    },
-    secondary: {
-      main: "#a78bfa",
-    },
-    background: {
-      default: "#020617",
-      paper: "#0f172a",
-    },
-    text: {
-      primary: "#e2e8f0",
-      secondary: "#cbd5e1",
-    },
+    mode: "light",
+    primary: { main: DEEP_SEA, contrastText: MIST },
+    secondary: { main: CORAL, contrastText: INK },
+    background: { default: MIST, paper: WHITE },
+    text: { primary: INK, secondary: "rgba(11, 28, 36, 0.68)" },
+    divider: "rgba(11, 28, 36, 0.1)",
+    ink: { main: INK, contrastText: MIST },
   },
+  shape: { borderRadius: 14 },
   typography: {
-    fontFamily: `var(--font-geist-sans), Arial, sans-serif`,
-    h1: { fontWeight: 700, letterSpacing: -0.05 },
-    h2: { fontWeight: 700, letterSpacing: -0.04 },
-    h3: { fontWeight: 600 },
-    h4: { fontWeight: 600 },
+    fontFamily: "var(--font-body), system-ui, sans-serif",
+    h1: { fontFamily: headingFont, fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.02 },
+    h2: { fontFamily: headingFont, fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.08 },
+    h3: { fontFamily: headingFont, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1.15 },
+    h4: { fontFamily: headingFont, fontWeight: 600, letterSpacing: "-0.015em" },
+    h5: { fontFamily: headingFont, fontWeight: 600 },
+    h6: { fontFamily: headingFont, fontWeight: 600 },
+    overline: { fontWeight: 700, letterSpacing: "0.14em", lineHeight: 1.6 },
+    body1: { lineHeight: 1.6 },
+    body2: { lineHeight: 1.55 },
     button: { textTransform: "none", fontWeight: 600 },
   },
-  shape: {
-    borderRadius: 18,
-  },
   components: {
+    MuiButtonBase: { defaultProps: { LinkComponent: NextLink } },
+    MuiLink: { defaultProps: { component: NextLink } },
     MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: "none",
-          padding: "0.8rem 1.4rem",
-        },
-      },
+      defaultProps: { disableElevation: true },
+      styleOverrides: { root: { borderRadius: 999, paddingInline: 22 }, sizeLarge: { paddingBlock: 12 } },
     },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: "none",
-        },
-      },
+    MuiCard: {
+      defaultProps: { elevation: 0 },
+      styleOverrides: { root: { border: "1px solid rgba(11, 28, 36, 0.08)" } },
     },
+    MuiPaper: { defaultProps: { elevation: 0 } },
+    MuiAppBar: { defaultProps: { elevation: 0 } },
+    MuiChip: { styleOverrides: { root: { fontWeight: 600 } } },
+    MuiTextField: { defaultProps: { fullWidth: true } },
   },
 });
+
+declare module "@mui/material/styles" {
+  interface Palette {
+    ink: Palette["primary"];
+  }
+  interface PaletteOptions {
+    ink?: PaletteOptions["primary"];
+  }
+}
