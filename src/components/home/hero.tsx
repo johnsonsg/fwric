@@ -24,7 +24,7 @@ export function Hero() {
             Richmond, Virginia · Since 1998
           </Typography>
           <Typography id="hero-title" variant="h1" sx={{ fontSize: { xs: 44, sm: 60, md: 76 }, mt: 1.5, textWrap: 'balance' }}>
-            Richmond's largest saltwater store.
+            Richmond&apos;s largest saltwater store.
           </Typography>
           <Typography sx={{ mt: 3, fontSize: { xs: 17, md: 19 }, opacity: 0.86, maxWidth: 520, textWrap: 'pretty' }}>
             Hand-picked corals, healthy fish and expert advice from people who have kept reefs for decades. Come see our
@@ -32,7 +32,7 @@ export function Hero() {
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
             <Button href="/livestock" variant="contained" color="secondary" size="large" endIcon={<ArrowForwardIcon />}>
-              See what's in stock
+              See what&apos;s in stock
             </Button>
             <Button component="a" href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" variant="outlined" size="large" sx={{ color: 'inherit', borderColor: 'rgba(243,247,248,0.4)', '&:hover': { borderColor: 'currentColor' } }}>
               Get directions
