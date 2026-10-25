@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { HOURS } from '@/lib/site';
+import { useSiteContent } from './content-provider';
 
 const noopSubscribe = () => () => {};
 
@@ -18,11 +19,12 @@ export function useStoreDayIndex() {
 
 export function HoursList() {
   const today = useStoreDayIndex();
+  const { business } = useSiteContent();
 
   return (
     <Box component="dl" sx={{ m: 0, display: 'flex', flexDirection: 'column' }}>
-      {HOURS.map((h, i) => {
-        const isToday = i === today;
+      {business.hours.map((h) => {
+        const isToday = h.day === HOURS[today]?.day;
         return (
           <Box
             key={h.day}

@@ -1,55 +1,70 @@
-import { NextResponse } from "next/server";
+import { z } from 'zod';
+import { requireAdmin } from '@/lib/admin-auth';
+import { brandingSchema, businessSchema, contentSchema, DEFAULT_CONTENT, pageSchema, PAGE_SLUGS, phoneHref } from '@/lib/content';
+import { getContentSnapshot, mediaConfigured } from '@/lib/content-store';
+import { connectToDatabase } from '@/lib/db';
+import { ContentDocument } from '@/models/SiteContent';
 
-import { connectToDatabase } from "@/lib/db";
-import { SiteSettings } from "@/models/SiteSettings";
-
-const fallbackSettings = {
-  siteName: "FWRIC",
-  tagline: "SEO-first web presence",
-  domain: "localhost:3000",
-  seoDescription: "Modern SEO-first web presence.",
-  heroBadge: "Web presence redesign",
-  heroTitle: "Build trust, improve visibility, and update the site without a developer.",
-  heroSubtitle:
-    "A modern web presence designed to help the business rank better, look more credible, and make updates quickly through a clean admin experience.",
-  primaryCtaText: "Open admin",
-  primaryCtaHref: "/admin",
-  secondaryCtaText: "Explore services",
-  secondaryCtaHref: "#services",
-};
+export const dynamic = 'force-dynamic';
+const updateSchema = z.discriminatedUnion('section', [
+  z.object({ section: z.literal('branding'), revision: z.number().int().nonnegative(), data: brandingSchema }).strict(),
+  z.object({ section: z.literal('business'), revision: z.number().int().nonnegative(), data: businessSchema }).strict(),
+  z.object({ section: z.literal('page'), slug: z.enum(PAGE_SLUGS), revision: z.number().int().nonnegative(), data: pageSchema }).strict(),
+]);
 
 export async function GET() {
-  try {
-    await connectToDatabase();
-    const settings = await SiteSettings.findOne({}).lean();
-
-    return NextResponse.json(settings ?? fallbackSettings);
-  } catch {
-    return NextResponse.json(fallbackSettings);
-  }
+  return Response.json(await getContentSnapshot(), { headers: { 'Cache-Control': 'no-store' } });
 }
 
 export async function PUT(request: Request) {
+  const session = await requireAdmin(request);
+  if (!session) return Response.json({ error: 'Sign in as an administrator to save changes.' }, { status: 401 });
+  let body: unknown;
+  try { body = await request.json(); } catch { return Response.json({ error: 'Invalid JSON request.' }, { status: 400 }); }
+  const parsed = updateSchema.safeParse(body);
+  if (!parsed.success) return Response.json({ error: parsed.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('\n') }, { status: 422 });
   try {
-    const payload = await request.json();
-
     await connectToDatabase();
-    const updated = await SiteSettings.findOneAndUpdate(
-      {},
-      {
-        ...fallbackSettings,
-        ...payload,
-      },
-      { new: true, upsert: true, setDefaultsOnInsert: true },
+    const stored = await ContentDocument.findById('site');
+    const update = parsed.data;
+    if (Number(stored?.revision ?? 0) !== update.revision) return Response.json({ error: 'Someone saved a newer version. Reload this editor before saving your changes.' }, { status: 409 });
+    const content = contentSchema.parse(stored?.content ?? DEFAULT_CONTENT);
+    let before: Record<string, unknown>;
+    let label: string;
+    if (update.section === 'page') {
+      before = content.pages[update.slug];
+      content.pages[update.slug] = update.data;
+      label = `${update.slug} page`;
+    } else {
+      before = content[update.section];
+      if (update.section === 'branding') content.branding = update.data;
+      else {
+        const previous = content.business;
+        const destinations = new Map([
+          [phoneHref(previous.phone), phoneHref(update.data.phone)],
+          [previous.mapsUrl, update.data.mapsUrl],
+          [`mailto:${previous.email}`, `mailto:${update.data.email}`],
+        ]);
+        for (const page of Object.values(content.pages)) {
+          page.primaryHref = destinations.get(page.primaryHref) ?? page.primaryHref;
+          page.secondaryHref = destinations.get(page.secondaryHref) ?? page.secondaryHref;
+          page.sections.forEach((section) => { section.linkHref = destinations.get(section.linkHref) ?? section.linkHref; });
+        }
+        content.business = update.data;
+      }
+      label = update.section === 'branding' ? 'Branding & logos' : 'Business details';
+    }
+    const changed = Object.keys(update.data).filter((key) => JSON.stringify(before[key]) !== JSON.stringify((update.data as Record<string, unknown>)[key]));
+    if (!changed.length) return Response.json(await getContentSnapshot());
+    const updated = await ContentDocument.findOneAndUpdate(
+      { _id: 'site', revision: update.revision },
+      { $set: { content }, $inc: { revision: 1 }, $push: { history: { $each: [{ section: label, summary: changed.join(', '), by: session.user.email, at: new Date(), revision: update.revision + 1 }], $slice: -100 } } },
+      { returnDocument: 'after', upsert: update.revision === 0, runValidators: true },
     );
-
-    return NextResponse.json(updated);
+    if (!updated) return Response.json({ error: 'A newer version was saved. Reload the editor and try again.' }, { status: 409 });
+    return Response.json({ content: contentSchema.parse(updated.content), revision: updated.revision, updatedAt: updated.updatedAt.toISOString(), storageAvailable: true, mediaAvailable: mediaConfigured() });
   } catch (error) {
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Unable to save settings",
-      },
-      { status: 400 },
-    );
+    if (error && typeof error === 'object' && 'code' in error && error.code === 11000) return Response.json({ error: 'A newer version was saved. Reload the editor and try again.' }, { status: 409 });
+    return Response.json({ error: 'Content could not be saved. Check the database connection and try again. Your changes are still in the editor.' }, { status: 503 });
   }
 }

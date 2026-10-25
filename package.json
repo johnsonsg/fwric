@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:admin": "node scripts/check-admin.mjs",
+    "check:content": "node scripts/check-content-store.mjs",
+    "check:editors": "node scripts/check-editor-ui.mjs"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

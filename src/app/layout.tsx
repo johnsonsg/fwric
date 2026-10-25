@@ -4,6 +4,8 @@ import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import { Providers } from "@/app/providers";
 import { AppThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/lib/site";
+import { getContentSnapshot } from "@/lib/content-store";
+import { SiteContentProvider } from "@/components/site/content-provider";
 import "./globals.css";
 
 const heading = Bricolage_Grotesque({
@@ -18,45 +20,36 @@ const body = Figtree({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Fish World | Richmond's Largest Saltwater Aquarium Store",
-    template: "%s | Fish World Richmond",
-  },
-  description:
-    "Virginia's ultimate source for live corals, saltwater fish, live rock and custom reef aquariums. Visit our 1,200-gallon living reef in Richmond, VA.",
-  generator: "v0.app",
-  metadataBase: new URL(siteConfig.url),
-  icons: {
-    icon: [
-      {
-        url: "/icon/icon-light-32x32.png",
-        type: "image/png",
-        sizes: "32x32",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon/icon-dark-32x32.png",
-        type: "image/png",
-        sizes: "32x32",
-        media: "(prefers-color-scheme: dark)",
-      },
-      { url: "/icon/icon.svg", type: "image/svg+xml", sizes: "any" },
-    ],
-    apple: "/icon/apple-icon.png",
-  },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { content: { branding, pages } } = await getContentSnapshot();
+  return {
+    title: { default: `${branding.siteName} | ${pages.home.seoTitle}`, template: `%s | ${branding.siteName}` },
+    description: pages.home.seoDescription,
+    metadataBase: new URL(siteConfig.url),
+    icons: {
+      icon: [
+        { url: branding.faviconLight, media: "(prefers-color-scheme: light)" },
+        { url: branding.faviconDark, media: "(prefers-color-scheme: dark)" },
+        { url: branding.faviconSvg, sizes: "any" },
+      ],
+      apple: branding.appleIcon,
+    },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0E4A5C",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const { content } = await getContentSnapshot();
   return (
     <html lang="en" className={`${heading.variable} ${body.variable} bg-background`}>
       <body>
         <AppThemeProvider>
-          <Providers>{children}</Providers>
+          <Providers><SiteContentProvider content={content}>{children}</SiteContentProvider></Providers>
         </AppThemeProvider>
       </body>
     </html>

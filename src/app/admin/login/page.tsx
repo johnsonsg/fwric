@@ -31,7 +31,8 @@ function AdminLoginForm() {
       return;
     }
 
-    const callbackUrl = searchParams.get("callbackUrl") ?? "/admin";
+    const requestedPath = searchParams.get("callbackUrl") ?? "/admin";
+    const callbackUrl = requestedPath === '/admin' || requestedPath.startsWith('/admin/') ? requestedPath : '/admin';
     router.push(callbackUrl);
     router.refresh();
   }
@@ -89,7 +90,7 @@ function AdminLoginForm() {
         </form>
 
         <p className="mt-6 text-xs text-slate-400">
-          Default local dev credentials: admin@example.com / change-me-123
+          Sign in with your administrator account to manage the website.
         </p>
       </div>
     </main>

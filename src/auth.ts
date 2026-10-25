@@ -10,7 +10,7 @@ const credentialsSchema = z.object({
 });
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.AUTH_SECRET ?? "dev-secret-change-me",
+  secret: process.env.AUTH_SECRET ?? (process.env.NODE_ENV === 'development' ? 'dev-secret-change-me' : undefined),
   session: {
     strategy: "jwt",
   },
@@ -32,8 +32,9 @@ export const authOptions: NextAuthOptions = {
         }
 
         const email = parsed.data.email.trim().toLowerCase();
-        const configuredEmail = (process.env.ADMIN_EMAIL ?? "admin@example.com").trim().toLowerCase();
-        const configuredPassword = process.env.ADMIN_PASSWORD ?? "change-me-123";
+        const configuredEmail = (process.env.ADMIN_EMAIL ?? (process.env.NODE_ENV === 'development' ? 'admin@example.com' : '')).trim().toLowerCase();
+        const configuredPassword = process.env.ADMIN_PASSWORD ?? (process.env.NODE_ENV === 'development' ? 'change-me-123' : '');
+        if (!configuredEmail || !configuredPassword) return null;
 
         if (email === configuredEmail && parsed.data.password === configuredPassword) {
           return {

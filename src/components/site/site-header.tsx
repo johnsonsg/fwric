@@ -19,7 +19,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import MailOutlineIcon from '@mui/icons-material/MailOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
-import { NAV_LINKS, SITE } from '@/lib/site';
+import { PAGE_SLUGS, pagePath, phoneHref } from '@/lib/content';
+import { useSiteContent } from './content-provider';
 import { Logo } from './logo';
 
 function isActive(pathname: string, href: string) {
@@ -28,6 +29,8 @@ function isActive(pathname: string, href: string) {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { business, pages } = useSiteContent();
+  const links = PAGE_SLUGS.map((slug) => ({ href: pagePath(slug), label: pages[slug].navLabel }));
   const [open, setOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -82,17 +85,17 @@ export function SiteHeader() {
       <Box sx={{ bgcolor: 'ink.main', color: 'ink.contrastText', fontSize: 14 }}>
         <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, py: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <Link href={SITE.phoneHref} color="inherit" underline="hover" sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
+            <Link href={phoneHref(business.phone)} color="inherit" underline="hover" sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
               <PhoneOutlinedIcon sx={{ fontSize: 16 }} aria-hidden />
-              {SITE.phone}
+              {business.phone}
             </Link>
-            <Link href={`mailto:${SITE.email}`} color="inherit" underline="hover" sx={{ display: { xs: 'none', sm: 'inline-flex' }, alignItems: 'center', gap: 0.75 }}>
+            <Link href={`mailto:${business.email}`} color="inherit" underline="hover" sx={{ display: { xs: 'none', sm: 'inline-flex' }, alignItems: 'center', gap: 0.75 }}>
               <MailOutlineIcon sx={{ fontSize: 16 }} aria-hidden />
-              {SITE.email}
+              {business.email}
             </Link>
           </Box>
           <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, opacity: 0.8 }}>
-            {`${SITE.address.street}, ${SITE.address.city}, ${SITE.address.state}`}
+            {`${business.street}, ${business.city}, ${business.state}`}
           </Box>
         </Container>
       </Box>
@@ -123,7 +126,7 @@ export function SiteHeader() {
             <Logo darkOpacity={1 - headerProgress} />
             <Box sx={{ flexGrow: 1 }} />
             <Box component="nav" aria-label="Main" sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5 }}>
-              {NAV_LINKS.map((link) => {
+              {links.map((link) => {
                 const active = isActive(pathname, link.href);
                 return (
                   <Button
@@ -142,7 +145,7 @@ export function SiteHeader() {
                 );
               })}
             </Box>
-            <Button component="a" href={SITE.phoneHref} variant="contained" color="primary" sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1 }}>
+            <Button component="a" href={phoneHref(business.phone)} variant="contained" color="primary" sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1 }}>
               Call the store
             </Button>
             <IconButton aria-label="Open menu" color="inherit" onClick={() => setOpen(true)} sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
@@ -161,7 +164,7 @@ export function SiteHeader() {
             </IconButton>
           </Box>
           <List component="nav" aria-label="Mobile">
-            {NAV_LINKS.map((link) => (
+            {links.map((link) => (
               <ListItemButton
                 key={link.href}
                 component={NextLink}
@@ -175,8 +178,8 @@ export function SiteHeader() {
             ))}
           </List>
           <Box sx={{ mt: 'auto' }}>
-            <Button component="a" href={SITE.phoneHref} variant="contained" fullWidth size="large">
-              {`Call ${SITE.phone}`}
+            <Button component="a" href={phoneHref(business.phone)} variant="contained" fullWidth size="large">
+              {`Call ${business.phone}`}
             </Button>
           </Box>
         </Box>

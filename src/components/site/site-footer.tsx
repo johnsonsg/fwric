@@ -1,11 +1,16 @@
+'use client';
+
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import { HOURS, NAV_LINKS, SITE } from '@/lib/site';
+import { PAGE_SLUGS, pagePath, phoneHref } from '@/lib/content';
+import { useSiteContent } from './content-provider';
 import { Logo } from './logo';
 
 export function SiteFooter() {
+  const { business, branding, pages } = useSiteContent();
+  const links = PAGE_SLUGS.map((slug) => ({ href: pagePath(slug), label: pages[slug].navLabel }));
   return (
     <Box component="footer" sx={{ bgcolor: 'ink.main', color: 'ink.contrastText', pt: { xs: 8, md: 10 }, pb: 4 }}>
       <Container>
@@ -18,15 +23,16 @@ export function SiteFooter() {
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Logo inverted />
+            {branding.tagline && <Typography variant="overline">{branding.tagline}</Typography>}
             <Typography variant="body2" sx={{ opacity: 0.72, maxWidth: 320 }}>
-              Virginia's ultimate source for saltwater fish, corals, live rock and custom reef systems for more than 25 years.
+              {business.footerDescription}
             </Typography>
           </Box>
 
           <Box>
             <FooterHeading>Explore</FooterHeading>
             <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {NAV_LINKS.map((link) => (
+              {links.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} color="inherit" underline="hover" sx={{ opacity: 0.85 }}>
                     {link.label}
@@ -39,13 +45,13 @@ export function SiteFooter() {
           <Box>
             <FooterHeading>Visit</FooterHeading>
             <Box component="address" sx={{ fontStyle: 'normal', display: 'flex', flexDirection: 'column', gap: 1, opacity: 0.85 }}>
-              <span>{SITE.address.street}</span>
-              <span>{`${SITE.address.city}, ${SITE.address.state} ${SITE.address.zip}`}</span>
-              <Link href={SITE.phoneHref} color="inherit" underline="hover">
-                {SITE.phone}
+              <span>{business.street}</span>
+              <span>{`${business.city}, ${business.state} ${business.zip}`}</span>
+              <Link href={phoneHref(business.phone)} color="inherit" underline="hover">
+                {business.phone}
               </Link>
-              <Link href={`mailto:${SITE.email}`} color="inherit" underline="hover">
-                {SITE.email}
+              <Link href={`mailto:${business.email}`} color="inherit" underline="hover">
+                {business.email}
               </Link>
             </Box>
           </Box>
@@ -53,7 +59,7 @@ export function SiteFooter() {
           <Box>
             <FooterHeading>Hours</FooterHeading>
             <Box component="dl" sx={{ m: 0, display: 'grid', gridTemplateColumns: 'auto 1fr', columnGap: 2, rowGap: 0.75, fontSize: 14 }}>
-              {HOURS.map((h) => (
+              {business.hours.map((h) => (
                 <Box key={h.day} sx={{ display: 'contents' }}>
                   <Box component="dt" sx={{ opacity: 0.6 }}>
                     {h.day.slice(0, 3)}
@@ -80,7 +86,7 @@ export function SiteFooter() {
             opacity: 0.6,
           }}
         >
-          <span>{`© ${new Date().getFullYear()} Fish World Richmond. All rights reserved.`}</span>
+          <span>{`© ${new Date().getFullYear()} ${branding.siteName}. All rights reserved.`}</span>
           <Link href="/admin" color="inherit" underline="hover">
             Staff login
           </Link>

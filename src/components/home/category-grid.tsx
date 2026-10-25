@@ -5,25 +5,19 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { CATEGORIES, type CategorySlug } from '@/lib/site';
+import { useSiteContent } from '@/components/site/content-provider';
 import { SectionHeading } from './section-heading';
 
-const FEATURED: { slug: CategorySlug; blurb: string }[] = [
-  { slug: 'corals', blurb: 'SPS, LPS & softies' },
-  { slug: 'fish', blurb: 'Reef-safe & FOWLR' },
-  { slug: 'live-rock', blurb: 'Cured & aquascape-ready' },
-  { slug: 'equipment', blurb: 'Lighting, flow, filtration' },
-  { slug: 'food-health', blurb: 'Frozen, dry & treatments' },
-];
-
 export function CategoryGrid() {
+  const { pages } = useSiteContent();
+  const featured = pages.livestock.sections.filter((section) => section.id !== 'invertebrates').slice(0, 5);
   return (
     <Box component="section" aria-labelledby="categories-title" sx={{ py: { xs: 8, md: 12 } }}>
       <Container>
         <SectionHeading
           id="categories-title"
           eyebrow="Shop the store"
-          title="Everything your reef needs, under one roof."
+          title={pages.home.collectionTitle}
         />
         <Box
           sx={{
@@ -34,11 +28,11 @@ export function CategoryGrid() {
             gridAutoRows: { xs: 180, md: 220 },
           }}
         >
-          {FEATURED.map(({ slug, blurb }, i) => (
+          {featured.map((section, i) => (
             <Box
-              key={slug}
+              key={section.id}
               component={NextLink}
-              href={`/livestock?category=${slug}`}
+              href={`/livestock?category=${section.id}`}
               sx={{
                 position: 'relative',
                 overflow: 'hidden',
@@ -51,14 +45,14 @@ export function CategoryGrid() {
                 '&:focus-visible': { outline: '3px solid', outlineColor: 'secondary.main', outlineOffset: 3 },
               }}
             >
-              <Image src={CATEGORIES[slug].image} alt="" fill sizes="(min-width: 900px) 50vw, 100vw" style={{ objectFit: 'cover' }} />
+              {section.image && <Image src={section.image} alt={section.imageAlt} unoptimized fill sizes="(min-width: 900px) 50vw, 100vw" style={{ objectFit: 'cover' }} />}
               <Box aria-hidden sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, rgba(11,28,36,0.85) 0%, rgba(11,28,36,0) 60%)' }} />
               <Box sx={{ position: 'absolute', left: 20, right: 20, bottom: 18 }}>
                 <Typography variant="h5" component="h3" sx={{ fontSize: { xs: 20, md: 24 } }}>
-                  {CATEGORIES[slug].label}
+                  {section.title}
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                  {blurb}
+                  {section.body}
                 </Typography>
               </Box>
             </Box>

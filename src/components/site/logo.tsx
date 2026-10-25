@@ -3,14 +3,16 @@
 import NextLink from 'next/link';
 import Image from 'next/image';
 import Box from '@mui/material/Box';
+import { useSiteContent } from './content-provider';
 
 export function Logo({ inverted = false, dark = inverted, darkOpacity }: { inverted?: boolean; dark?: boolean; darkOpacity?: number }) {
+  const { branding } = useSiteContent();
   const opacity = darkOpacity ?? (dark ? 1 : 0);
   return (
     <Box
       component={NextLink}
       href="/"
-      aria-label="Fish World home"
+      aria-label={`${branding.siteName} home`}
       sx={{
         display: 'inline-flex',
         flexShrink: 0,
@@ -25,8 +27,8 @@ export function Logo({ inverted = false, dark = inverted, darkOpacity }: { inver
       }}
     >
       <Image
-        src="/logo/logo-light.svg"
-        alt="Fish World - Saltwater Aquariums"
+        src={branding.logoLight}
+        alt={branding.logoAlt}
         width={696}
         height={296}
         loading={inverted ? 'lazy' : 'eager'}
@@ -34,7 +36,7 @@ export function Logo({ inverted = false, dark = inverted, darkOpacity }: { inver
         style={{ display: 'block', width: '100%', height: 'auto', opacity: 1 - opacity }}
       />
       <Image
-        src="/logo/logo-dark.svg"
+        src={branding.logoDark}
         alt=""
         aria-hidden
         width={696}
