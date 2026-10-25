@@ -3,14 +3,15 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import MailOutlineIcon from '@mui/icons-material/MailOutlined';
 import { HoursList } from '@/components/site/hours-list';
 import { getContentSnapshot } from '@/lib/content-store';
 import { phoneHref } from '@/lib/content';
 
-export async function VisitSection() {
+export async function VisitSection({ showEmail = false }: { showEmail?: boolean } = {}) {
   const { content: { business } } = await getContentSnapshot();
   return (
-    <Box component="section" aria-labelledby="visit-title" sx={{ pb: { xs: 8, md: 12 } }}>
+    <Box component="section" aria-labelledby="visit-title" sx={{ pt: showEmail ? { xs: 6, md: 10 } : 0, pb: { xs: 8, md: 12 } }}>
       <Container>
         <Box
           sx={{
@@ -50,6 +51,9 @@ export async function VisitSection() {
               <Button component="a" href={phoneHref(business.phone)} variant="outlined" size="large">
                 {business.phone}
               </Button>
+              {showEmail && <Button component="a" href={`mailto:${business.email}`} variant="outlined" size="large" startIcon={<MailOutlineIcon />}>
+                Email us
+              </Button>}
             </Box>
           </Box>
           <Box>

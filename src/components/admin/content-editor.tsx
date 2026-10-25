@@ -114,6 +114,8 @@ function ContentForm({ target, snapshot }: { target: EditorTarget; snapshot: Con
           {pageTarget && <>
             <EditorCard title="Page introduction" help="The first content visitors see when opening this page."><Stack spacing={2.5}>{fields(['navLabel', 'eyebrow', 'title', 'description'], ['description'])}{imageField('image', 'imageAlt')}{fields(['imageAlt'])}</Stack></EditorCard>
             <EditorCard title="Page buttons" help="Use a site path such as /contact or /livestock, or a complete HTTPS address. Clear a button’s text to hide it."><Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>{fields(['primaryLabel', 'primaryHref', 'secondaryLabel', 'secondaryHref'])}</Box></EditorCard>
+            {target === 'contact' && <Alert severity="info" action={<Button href="/admin/business" target="_blank">Business details</Button>}>The contact page uses the shared Visit the Store section, including directions, phone, email, and opening hours. Edit those details under Business details.</Alert>}
+            {target !== 'contact' && <>
             <EditorCard title="Content section"><Stack spacing={2.5}>{target === 'home' && fields(['collectionTitle'])}{fields(['sectionTitle', 'sectionIntro'], ['sectionIntro'])}{imageField('sectionImage', 'sectionImageAlt')}{fields(['sectionImageAlt', 'sectionCaption'])}</Stack></EditorCard>
             <EditorCard title={target === 'livestock' ? 'Store categories' : 'Content cards'} help={target === 'livestock' ? 'These categories also power the home page shop cards and category filters. Editing the title keeps the existing category link working.' : 'Add, edit, or reorder the cards that appear in this page’s content section.'}>
               <Stack spacing={3}>{sections.map((section, index) => <Box key={section.id} sx={{ p: 2.5, border: 1, borderColor: 'divider', borderRadius: 2 }}>
@@ -129,6 +131,7 @@ function ContentForm({ target, snapshot }: { target: EditorTarget; snapshot: Con
               </Box>)}</Stack>
               <Button sx={{ mt: 3 }} variant="outlined" disabled={sections.length >= 40} onClick={() => update('sections', [...sections, { id: `section-${crypto.randomUUID().slice(0, 8)}`, title: 'New section', body: '', image: '', imageAlt: '', linkLabel: '', linkHref: '' }])}>Add content card</Button>
             </EditorCard>
+            </>}
             <EditorCard title="Search appearance" help="Used in this page’s browser title and search description."><Stack spacing={2.5}>{fields(['seoTitle', 'seoDescription'], ['seoDescription'])}<Box sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}><Typography color="primary"  sx={{fontWeight: 700}}>{value('seoTitle') || value('title')} | {snapshot.content.branding.siteName}</Typography><Typography variant="body2" color="text.secondary">{value('seoDescription') || value('description')}</Typography></Box></Stack></EditorCard>
           </>}
         </Stack>

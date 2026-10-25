@@ -41,7 +41,8 @@ for (const target of ['branding', 'business', ...PAGE_SLUGS]) {
   } else {
     assert.ok(html.includes('Page introduction'));
     assert.ok(html.includes('Search appearance'));
-    assert.ok(html.includes('Card heading'));
+    if (target === 'contact') assert.ok(html.includes('shared Visit the Store section'));
+    else assert.ok(html.includes('Card heading'));
   }
   client.clear();
   console.log('PASS rendered editor', target);

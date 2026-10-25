@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import MailOutlineIcon from '@mui/icons-material/MailOutlined';
 import { SiteHeader } from '@/components/site/site-header';
 import { SiteFooter } from '@/components/site/site-footer';
 import { VisitSection } from '@/components/home/visit-section';
@@ -23,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ContentPage({ params, searchParams }: Props) {
   const { slug } = await params;
   if (!isPageSlug(slug) || slug === 'home') notFound();
-  const { content: { pages, business } } = await getContentSnapshot();
+  const { content: { pages } } = await getContentSnapshot();
   const page = pages[slug];
   const query = await searchParams;
   const selectedCategory = typeof query.category === 'string' && page.sections.some((section) => section.id === query.category) ? query.category : '';
@@ -48,7 +47,7 @@ export default async function ContentPage({ params, searchParams }: Props) {
           </Box>}
         </Container>
       </Box>
-      <Container sx={{ py: { xs: 6, md: 10 } }}>
+      {slug !== 'contact' && <Container sx={{ py: { xs: 6, md: 10 } }}>
         {page.sectionTitle && <Typography variant="h2" sx={{ fontSize: { xs: 30, md: 42 }, mb: 2 }}>{page.sectionTitle}</Typography>}
         {page.sectionIntro && <Typography sx={{ maxWidth: 800, whiteSpace: 'pre-line', mb: 4 }}>{page.sectionIntro}</Typography>}
         {page.sectionImage && <Box sx={{ mb: 4 }}>
@@ -69,14 +68,8 @@ export default async function ContentPage({ params, searchParams }: Props) {
             </Box>
           </Box>)}
         </Box>
-        {slug === 'contact' && <Stack spacing={2} sx={{ mt: 5 }}>
-          <Typography variant="h5" component="h2">Get in touch</Typography>
-          <Button href={`mailto:${business.email}`} variant="contained" size="large" startIcon={<MailOutlineIcon />} sx={{ alignSelf: 'flex-start', maxWidth: '100%', overflowWrap: 'anywhere' }}>
-            {business.email}
-          </Button>
-        </Stack>}
-      </Container>
-      <VisitSection />
+      </Container>}
+      <VisitSection showEmail={slug === 'contact'} />
     </main>
     <SiteFooter />
   </>;
