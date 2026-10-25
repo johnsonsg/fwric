@@ -1,8 +1,8 @@
 'use client';
 
 import NextLink from 'next/link';
+import Image from 'next/image';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 
 export function Logo({ inverted = false }: { inverted?: boolean }) {
   return (
@@ -10,23 +10,23 @@ export function Logo({ inverted = false }: { inverted?: boolean }) {
       component={NextLink}
       href="/"
       aria-label="Fish World home"
-      sx={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: inverted ? 'primary.contrastText' : 'text.primary' }}
+      sx={{
+        display: 'inline-flex',
+        flexShrink: 0,
+        width: inverted ? 220 : { xs: 144, md: 164 },
+        maxWidth: '100%',
+        textDecoration: 'none',
+      }}
     >
-      <Typography
-        component="span"
-        sx={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 24, letterSpacing: '-0.04em', lineHeight: 1 }}
-      >
-        Fish World
-        <Box component="span" sx={{ color: 'secondary.main' }}>
-          .
-        </Box>
-      </Typography>
-      <Typography
-        component="span"
-        sx={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.7, mt: 0.5 }}
-      >
-        Richmond Saltwater
-      </Typography>
+      <Image
+        src={inverted ? '/logo/logo-dark.svg' : '/logo/logo-light.svg'}
+        alt="Fish World - Saltwater Aquariums"
+        width={696}
+        height={296}
+        loading={inverted ? 'lazy' : 'eager'}
+        unoptimized
+        style={{ display: 'block', width: '100%', height: 'auto' }}
+      />
     </Box>
   );
 }

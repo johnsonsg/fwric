@@ -29,11 +29,21 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   icons: {
     icon: [
-      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      {
+        url: "/icon/icon-light-32x32.png",
+        type: "image/png",
+        sizes: "32x32",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/icon/icon-dark-32x32.png",
+        type: "image/png",
+        sizes: "32x32",
+        media: "(prefers-color-scheme: dark)",
+      },
+      { url: "/icon/icon.svg", type: "image/svg+xml", sizes: "any" },
     ],
-    apple: "/apple-icon.png",
+    apple: "/icon/apple-icon.png",
   },
 };
 
