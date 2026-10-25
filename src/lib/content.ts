@@ -104,7 +104,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       eyebrow: 'Richmond, Virginia · Since 1998', imageAlt: 'Vibrant reef aquarium filled with colorful corals and tropical fish',
       seoTitle: "Richmond's Largest Saltwater Aquarium Store", primaryLabel: "See what's in stock", primaryHref: '/livestock', secondaryLabel: 'Get directions', secondaryHref: SITE.mapsUrl,
       collectionTitle: 'Everything your reef needs, under one roof.', sectionTitle: 'A store run by people who keep reefs, not just sell them.',
-      sectionIntro: 'Why Fish World', sectionImage: '/images/custom-install.png', sectionImageAlt: 'Large custom reef aquarium installed in a home', sectionCaption: '1,200 gallon in-store living reef',
+      sectionIntro: 'Why Fish World', sectionImage: '/images/custom-install-v2.jpg', sectionImageAlt: 'Large custom reef aquarium installed in a home', sectionCaption: '1,200 gallon in-store living reef',
     },
     livestock: {
       ...page('Livestock', 'Find your next reef favorite.', 'Explore our saltwater fish, corals, live rock, and aquarium essentials. Availability changes daily; call or visit to find out what is in the store today.', '/images/corals.png',
@@ -112,8 +112,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       sectionTitle: 'Explore the store',
     },
     services: {
-      ...page('Services', 'Support for your saltwater aquarium.', 'From your first reef to a custom aquarium, talk with our team about the right setup and ongoing care for your system.', '/images/custom-install.png', [
-        section('custom-aquariums', 'Custom aquariums', 'Tell us about your space and the aquarium you have in mind. We can discuss a custom reef system and the equipment it needs.', '/images/custom-install.png', 'Custom reef aquarium'),
+      ...page('Services', 'Support for your saltwater aquarium.', 'From your first reef to a custom aquarium, talk with our team about the right setup and ongoing care for your system.', '/images/custom-install-v2.jpg', [
+        section('custom-aquariums', 'Custom aquariums', 'Tell us about your space and the aquarium you have in mind. We can discuss a custom reef system and the equipment it needs.', '/images/custom-install-v2.jpg', 'Custom reef aquarium'),
         section('equipment', 'Equipment guidance', 'Get help choosing lighting, filtration, and flow for your aquarium.', '/images/equipment.png', 'Aquarium equipment'),
         section('water-testing', 'Water testing and advice', 'Bring a water sample or photos of your tank. Our team can help you understand your system and plan your next steps.'),
       ]), sectionTitle: 'How we can help', primaryLabel: 'Talk to our team', primaryHref: '/contact',
@@ -121,7 +121,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     about: {
       ...page('About', 'A local home for reef keepers.', 'Fish World is a saltwater aquarium store in Richmond, Virginia. Visit our team, explore the livestock, and experience our 1,200-gallon living reef.', '/images/hero-reef.png', [
         section('our-store', 'Come meet the team', 'Whether you are setting up your first aquarium or caring for a reef you have kept for years, we are here to help you make informed choices.'),
-        section('living-reef', 'Experience the living reef', 'Our in-store reef is a place to see a mature saltwater aquarium in person and talk through ideas for your own system.', '/images/custom-install.png', 'Fish World living reef aquarium'),
+        section('living-reef', 'Experience the living reef', 'Our in-store reef is a place to see a mature saltwater aquarium in person and talk through ideas for your own system.', '/images/custom-install-v2.jpg', 'Fish World living reef aquarium'),
         section('our-approach', 'Advice for your aquarium', 'Tell us about your tank, your livestock, and your goals. We will help you find an approach that fits your aquarium.'),
       ]), sectionTitle: 'Get to know Fish World',
     },
