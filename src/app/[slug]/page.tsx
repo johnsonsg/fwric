@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import MailOutlineIcon from '@mui/icons-material/MailOutlined';
 import { SiteHeader } from '@/components/site/site-header';
 import { SiteFooter } from '@/components/site/site-footer';
 import { VisitSection } from '@/components/home/visit-section';
@@ -70,7 +71,9 @@ export default async function ContentPage({ params, searchParams }: Props) {
         </Box>
         {slug === 'contact' && <Stack spacing={2} sx={{ mt: 5 }}>
           <Typography variant="h5" component="h2">Get in touch</Typography>
-          <Typography><a href={`mailto:${business.email}`}>{business.email}</a></Typography>
+          <Button href={`mailto:${business.email}`} variant="contained" size="large" startIcon={<MailOutlineIcon />} sx={{ alignSelf: 'flex-start', maxWidth: '100%', overflowWrap: 'anywhere' }}>
+            {business.email}
+          </Button>
         </Stack>}
       </Container>
       <VisitSection />
