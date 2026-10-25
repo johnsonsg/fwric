@@ -135,8 +135,8 @@ export function SiteHeader() {
                     href={link.href}
                     aria-current={active ? 'page' : undefined}
                     sx={{
-                      color: active ? 'color-mix(in srgb, #FF7A59 calc((1 - var(--header-progress)) * 100%), #0E4A5C)' : 'inherit',
-                      bgcolor: active ? 'rgba(14, 74, 92, 0.08)' : 'transparent',
+                      color: active ? 'color-mix(in srgb, var(--mui-palette-secondary-light) calc((1 - var(--header-progress)) * 100%), var(--mui-palette-secondary-main))' : 'inherit',
+                      bgcolor: active ? 'rgb(var(--mui-palette-secondary-mainChannel) / 0.1)' : 'transparent',
                       px: 2,
                     }}
                   >

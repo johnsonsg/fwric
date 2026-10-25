@@ -20,7 +20,7 @@ export async function ReefFeature() {
         </Box>}
 
         <Box>
-          <Typography variant="overline" sx={{ color: 'secondary.main' }}>
+          <Typography variant="overline" sx={{ color: 'secondary.light' }}>
             {page.sectionIntro}
           </Typography>
           <Typography id="reef-title" variant="h2" sx={{ fontSize: { xs: 32, md: 44 }, mt: 1, textWrap: 'balance' }}>
@@ -28,13 +28,13 @@ export async function ReefFeature() {
           </Typography>
           <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, mt: 5, display: 'flex', flexDirection: 'column', gap: 3.5 }}>
             {page.sections.map((point) => (
-              <Box component="li" key={point.id} sx={{ pl: 3, borderLeft: '2px solid', borderColor: 'secondary.main' }}>
+              <Box component="li" key={point.id} sx={{ pl: 3, borderLeft: '2px solid', borderColor: 'secondary.light' }}>
                 {point.image && <Box sx={{ position: 'relative', aspectRatio: '16 / 9', mb: 2, borderRadius: 2, overflow: 'hidden' }}><Image src={point.image} alt={point.imageAlt} fill unoptimized style={{ objectFit: 'cover' }} /></Box>}
                 <Typography variant="h6" component="h3">
                   {point.title}
                 </Typography>
                 <Typography sx={{ mt: 0.5, opacity: 0.8, whiteSpace: 'pre-line' }}>{point.body}</Typography>
-                {point.linkLabel && <Button href={point.linkHref} color="secondary" sx={{ mt: 1 }}>{point.linkLabel}</Button>}
+                {point.linkLabel && <Button href={point.linkHref} color="secondary" sx={{ mt: 1, color: 'secondary.light' }}>{point.linkLabel}</Button>}
               </Box>
             ))}
           </Box>

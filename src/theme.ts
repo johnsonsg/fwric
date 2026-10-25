@@ -4,7 +4,8 @@ import NextLink from "next/link";
 import { createTheme } from "@mui/material/styles";
 
 const DEEP_SEA = "#0E4A5C";
-const CORAL = "#FF7A59";
+const FISH_BLUE = "#1B6FA8";
+const FISH_BLUE_LIGHT = "#3FB6D9";
 const INK = "#0B1C24";
 const MIST = "#F3F7F8";
 const WHITE = "#FFFFFF";
@@ -16,7 +17,7 @@ export const theme = createTheme({
   palette: {
     mode: "light",
     primary: { main: DEEP_SEA, contrastText: MIST },
-    secondary: { main: CORAL, contrastText: INK },
+    secondary: { main: FISH_BLUE, light: FISH_BLUE_LIGHT, contrastText: WHITE },
     background: { default: MIST, paper: WHITE },
     text: { primary: INK, secondary: "rgba(11, 28, 36, 0.68)" },
     divider: "rgba(11, 28, 36, 0.1)",

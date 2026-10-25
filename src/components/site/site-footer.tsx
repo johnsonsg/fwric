@@ -98,7 +98,7 @@ export function SiteFooter() {
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
   return (
-    <Typography variant="overline" component="h2" sx={{ display: 'block', mb: 2, color: 'secondary.main' }}>
+    <Typography variant="overline" component="h2" sx={{ display: 'block', mb: 2, color: 'secondary.light' }}>
       {children}
     </Typography>
   );

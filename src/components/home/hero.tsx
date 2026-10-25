@@ -21,7 +21,7 @@ export async function Hero() {
       />
       <Container sx={{ position: 'relative', py: { xs: 10, md: 16 }, minHeight: { md: 640 }, display: 'flex', alignItems: 'center' }}>
         <Box sx={{ maxWidth: 640 }}>
-          <Typography variant="overline" sx={{ color: 'secondary.main' }}>
+          <Typography variant="overline" sx={{ color: 'secondary.light' }}>
             {page.eyebrow}
           </Typography>
           <Typography id="hero-title" variant="h1" sx={{ fontSize: { xs: 44, sm: 60, md: 76 }, mt: 1.5, textWrap: 'balance' }}>
