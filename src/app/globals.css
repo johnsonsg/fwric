@@ -15,8 +15,14 @@ body {
 
 .ocean-reef-background {
   background-image:
-    radial-gradient(ellipse at 50% 0%, rgba(133, 211, 255, 0.16), transparent 55%),
-    linear-gradient(180deg, #176b9a 0%, #14517e 30%, #12365d 65%, #081a35 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(133, 211, 255, 0.025), transparent 55%),
+    linear-gradient(180deg, #164366 0%, #123655 30%, #0d2849 65%, #081a35 100%);
+}
+
+.ocean-reef-image {
+  box-shadow:
+    0 0 14px rgba(90, 190, 255, 0.35),
+    0 0 30px rgba(90, 190, 255, 0.18);
 }
 
 img {

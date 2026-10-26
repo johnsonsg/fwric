@@ -10,7 +10,7 @@ export async function ReefFeature() {
   return (
     <Box component="section" aria-labelledby="reef-title" className="ocean-reef-background" sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', py: { xs: 8, md: 12 } }}>
       <Container sx={{ display: 'grid', gap: { xs: 5, md: 8 }, gridTemplateColumns: page.sectionImage ? { xs: '1fr', md: '1fr 1fr' } : '1fr', alignItems: 'center' }}>
-        {page.sectionImage && <Box sx={{ position: 'relative', aspectRatio: '4 / 5', borderRadius: 4, overflow: 'hidden' }}>
+        {page.sectionImage && <Box className="ocean-reef-image" sx={{ position: 'relative', aspectRatio: '4 / 5', borderRadius: 4, overflow: 'hidden' }}>
           {page.sectionImage && <Image src={page.sectionImage} alt={page.sectionImageAlt} unoptimized fill sizes="(min-width: 900px) 50vw, 100vw" style={{ objectFit: 'cover' }} />}
           {page.sectionCaption && <Box sx={{ position: 'absolute', left: 16, bottom: 16, bgcolor: 'background.paper', color: 'text.primary', borderRadius: 3, px: 2.5, py: 2 }}>
             <Typography sx={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 22, lineHeight: 1, color: 'primary.main' }}>
@@ -29,7 +29,7 @@ export async function ReefFeature() {
           <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, mt: 5, display: 'flex', flexDirection: 'column', gap: 3.5 }}>
             {page.sections.map((point) => (
               <Box component="li" key={point.id} sx={{ pl: 3, borderLeft: '2px solid', borderColor: '#A2EDE5' }}>
-                {point.image && <Box sx={{ position: 'relative', aspectRatio: '16 / 9', mb: 2, borderRadius: 2, overflow: 'hidden' }}><Image src={point.image} alt={point.imageAlt} fill unoptimized style={{ objectFit: 'cover' }} /></Box>}
+                {point.image && <Box className="ocean-reef-image" sx={{ position: 'relative', aspectRatio: '16 / 9', mb: 2, borderRadius: 2, overflow: 'hidden' }}><Image src={point.image} alt={point.imageAlt} fill unoptimized style={{ objectFit: 'cover' }} /></Box>}
                 <Typography variant="h6" component="h3">
                   {point.title}
                 </Typography>

@@ -42,7 +42,7 @@ export default async function ContentPage({ params, searchParams }: Props) {
               {page.secondaryLabel && <Button href={page.secondaryHref} variant="outlined" color="inherit" size="large">{page.secondaryLabel}</Button>}
             </Stack>
           </Box>
-          {page.image && <Box sx={{ position: 'relative', aspectRatio: '4 / 3', borderRadius: 4, overflow: 'hidden' }}>
+          {page.image && <Box className="ocean-reef-image" sx={{ position: 'relative', aspectRatio: '4 / 3', borderRadius: 4, overflow: 'hidden' }}>
             <Image src={page.image} alt={page.imageAlt} fill unoptimized loading="eager" style={{ objectFit: 'cover' }} />
           </Box>}
         </Container>
