@@ -31,10 +31,10 @@ export default async function ContentPage({ params, searchParams }: Props) {
   return <>
     <SiteHeader />
     <main>
-      <Box component="section" sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', py: { xs: 6, md: 10 } }}>
+      <Box component="section" className="ocean-reef-background" sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', py: { xs: 6, md: 10 } }}>
         <Container sx={{ display: 'grid', gridTemplateColumns: page.image ? { xs: '1fr', md: '1.1fr 1fr' } : '1fr', gap: 5, alignItems: 'center' }}>
           <Box>
-            <Typography variant="overline" sx={{ color: 'secondary.light' }}>{page.eyebrow}</Typography>
+            <Typography variant="overline" sx={{ color: '#A2EDE5' }}>{page.eyebrow}</Typography>
             <Typography variant="h1" sx={{ fontSize: { xs: 40, md: 60 }, mt: 1, textWrap: 'balance' }}>{page.title}</Typography>
             <Typography sx={{ fontSize: 18, mt: 3, opacity: 0.9, maxWidth: 680, whiteSpace: 'pre-line' }}>{page.description}</Typography>
             <Stack direction="row"   sx={{mt: 4, flexWrap: "wrap", gap: 1.5}}>

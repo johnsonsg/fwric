@@ -42,7 +42,18 @@ export const theme = createTheme({
     MuiLink: { defaultProps: { component: NextLink } },
     MuiButton: {
       defaultProps: { disableElevation: true },
-      styleOverrides: { root: { borderRadius: 999, paddingInline: 22 }, sizeLarge: { paddingBlock: 12 } },
+      styleOverrides: {
+        root: { borderRadius: 999, paddingInline: 22 },
+        sizeLarge: { paddingBlock: 12 },
+        contained: ({ ownerState }) =>
+          ownerState.color === 'primary' || ownerState.color === 'secondary'
+            ? {
+                backgroundColor: '#12365D',
+                color: WHITE,
+                '&:hover': { backgroundColor: '#0B2645' },
+              }
+            : {},
+      },
     },
     MuiCard: {
       defaultProps: { elevation: 0 },

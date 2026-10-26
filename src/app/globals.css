@@ -13,6 +13,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ocean-reef-background {
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(133, 211, 255, 0.16), transparent 55%),
+    linear-gradient(180deg, #176b9a 0%, #14517e 30%, #12365d 65%, #081a35 100%);
+}
+
 img {
   max-width: 100%;
   display: block;

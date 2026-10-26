@@ -8,7 +8,7 @@ import { getContentSnapshot } from '@/lib/content-store';
 export async function ReefFeature() {
   const { content: { pages: { home: page } } } = await getContentSnapshot();
   return (
-    <Box component="section" aria-labelledby="reef-title" sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', py: { xs: 8, md: 12 } }}>
+    <Box component="section" aria-labelledby="reef-title" className="ocean-reef-background" sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', py: { xs: 8, md: 12 } }}>
       <Container sx={{ display: 'grid', gap: { xs: 5, md: 8 }, gridTemplateColumns: page.sectionImage ? { xs: '1fr', md: '1fr 1fr' } : '1fr', alignItems: 'center' }}>
         {page.sectionImage && <Box sx={{ position: 'relative', aspectRatio: '4 / 5', borderRadius: 4, overflow: 'hidden' }}>
           {page.sectionImage && <Image src={page.sectionImage} alt={page.sectionImageAlt} unoptimized fill sizes="(min-width: 900px) 50vw, 100vw" style={{ objectFit: 'cover' }} />}
@@ -20,7 +20,7 @@ export async function ReefFeature() {
         </Box>}
 
         <Box>
-          <Typography variant="overline" sx={{ color: 'secondary.light' }}>
+          <Typography variant="overline" sx={{ color: '#A2EDE5' }}>
             {page.sectionIntro}
           </Typography>
           <Typography id="reef-title" variant="h2" sx={{ fontSize: { xs: 32, md: 44 }, mt: 1, textWrap: 'balance' }}>
@@ -28,13 +28,13 @@ export async function ReefFeature() {
           </Typography>
           <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, mt: 5, display: 'flex', flexDirection: 'column', gap: 3.5 }}>
             {page.sections.map((point) => (
-              <Box component="li" key={point.id} sx={{ pl: 3, borderLeft: '2px solid', borderColor: 'secondary.light' }}>
+              <Box component="li" key={point.id} sx={{ pl: 3, borderLeft: '2px solid', borderColor: '#A2EDE5' }}>
                 {point.image && <Box sx={{ position: 'relative', aspectRatio: '16 / 9', mb: 2, borderRadius: 2, overflow: 'hidden' }}><Image src={point.image} alt={point.imageAlt} fill unoptimized style={{ objectFit: 'cover' }} /></Box>}
                 <Typography variant="h6" component="h3">
                   {point.title}
                 </Typography>
                 <Typography sx={{ mt: 0.5, opacity: 0.8, whiteSpace: 'pre-line' }}>{point.body}</Typography>
-                {point.linkLabel && <Button href={point.linkHref} color="secondary" sx={{ mt: 1, color: 'secondary.light' }}>{point.linkLabel}</Button>}
+                {point.linkLabel && <Button href={point.linkHref} color="secondary" sx={{ mt: 1, color: '#A2EDE5' }}>{point.linkLabel}</Button>}
               </Box>
             ))}
           </Box>
