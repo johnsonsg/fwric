@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutlined';
@@ -37,12 +38,12 @@ export async function VisitSection({ showEmail = false }: { showEmail?: boolean 
             </Typography>
             <Box component="address" sx={{ fontStyle: 'normal', display: 'flex', gap: 1.5, alignItems: 'flex-start', mt: 1 }}>
               <PlaceOutlinedIcon color="primary" aria-hidden />
-              <Box>
+              <Link component="a" href={business.mapsUrl} target="_blank" rel="noopener noreferrer" color="inherit" underline="hover" aria-label="Get directions to Fish World in Google Maps (opens in a new tab)">
                 <Typography sx={{ fontWeight: 600 }}>{business.street}</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
                   {`${business.city}, ${business.state} ${business.zip}`}
                 </Typography>
-              </Box>
+              </Link>
             </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 2 }}>
               <Button component="a" href={business.mapsUrl} target="_blank" rel="noopener noreferrer" variant="contained" size="large">

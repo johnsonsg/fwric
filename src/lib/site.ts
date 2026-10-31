@@ -13,13 +13,13 @@ export const SITE = {
   phoneHref: "tel:+18043792466",
   email: "fishworld1@gmail.com",
   address: {
-    street: "11634A Busy Street",
+    street: "11634 Busy St, Ste A",
     city: "Richmond",
     state: "VA",
     zip: "23236",
   },
   mapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=11634A+Busy+Street+Richmond+VA+23236",
+    "https://www.google.com/maps/dir/?api=1&destination=11634+Busy+St%2C+Ste+A%2C+Richmond%2C+VA%2C+United+States%2C+23236-4065",
 };
 
 export const HOURS = [

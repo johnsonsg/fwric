@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { PAGE_SLUGS, pagePath, phoneHref } from '@/lib/content';
 import { useSiteContent } from './content-provider';
 import { Logo } from './logo';
+import { FacebookLink } from './facebook-link';
 
 export function SiteFooter() {
   const { business, branding, pages } = useSiteContent();
@@ -27,6 +28,7 @@ export function SiteFooter() {
             <Typography variant="body2" sx={{ opacity: 0.72, maxWidth: 320 }}>
               {business.footerDescription}
             </Typography>
+            <Box sx={{ alignSelf: 'flex-start' }}><FacebookLink /></Box>
           </Box>
 
           <Box>
@@ -45,8 +47,10 @@ export function SiteFooter() {
           <Box>
             <FooterHeading>Visit</FooterHeading>
             <Box component="address" sx={{ fontStyle: 'normal', display: 'flex', flexDirection: 'column', gap: 1, opacity: 0.85 }}>
-              <span>{business.street}</span>
-              <span>{`${business.city}, ${business.state} ${business.zip}`}</span>
+              <Link component="a" href={business.mapsUrl} target="_blank" rel="noopener noreferrer" color="inherit" underline="hover" aria-label="Get directions to Fish World in Google Maps (opens in a new tab)">
+                <Box component="span" sx={{ display: 'block' }}>{business.street}</Box>
+                <Box component="span" sx={{ display: 'block' }}>{`${business.city}, ${business.state} ${business.zip}`}</Box>
+              </Link>
               <Link href={phoneHref(business.phone)} color="inherit" underline="hover">
                 {business.phone}
               </Link>

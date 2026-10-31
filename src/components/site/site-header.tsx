@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import type { CSSProperties } from 'react';
+import { useState } from 'react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import AppBar from '@mui/material/AppBar';
@@ -16,12 +15,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import CloseIcon from '@mui/icons-material/Close';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import MailOutlineIcon from '@mui/icons-material/MailOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import { PAGE_SLUGS, pagePath, phoneHref } from '@/lib/content';
 import { useSiteContent } from './content-provider';
 import { Logo } from './logo';
+import { FACEBOOK_URL } from './facebook-link';
 
 function isActive(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -32,56 +33,16 @@ export function SiteHeader() {
   const { business, pages } = useSiteContent();
   const links = PAGE_SLUGS.map((slug) => ({ href: pagePath(slug), label: pages[slug].navLabel }));
   const [open, setOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    let frame = 0;
-    let previousTime = 0;
-    let current = 0;
-    let target = 0;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    const animate = (time: number) => {
-      const elapsed = previousTime ? Math.min(time - previousTime, 64) : 16;
-      previousTime = time;
-      current += (target - current) * (1 - Math.exp(-elapsed / 140));
-      if (Math.abs(target - current) < 0.001) current = target;
-      setScrollProgress(current);
-      if (current !== target) {
-        frame = window.requestAnimationFrame(animate);
-      } else {
-        frame = 0;
-        previousTime = 0;
-      }
-    };
-
-    const updateHeader = () => {
-      target = Math.min(1, Math.max(0, (window.scrollY - 16) / 128));
-      if (reducedMotion.matches) {
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-        previousTime = 0;
-        current = target;
-        setScrollProgress(current);
-      } else if (!frame && current !== target) {
-        frame = window.requestAnimationFrame(animate);
-      }
-    };
-    updateHeader();
-    window.addEventListener('scroll', updateHeader, { passive: true });
-    reducedMotion.addEventListener('change', updateHeader);
-    return () => {
-      window.removeEventListener('scroll', updateHeader);
-      reducedMotion.removeEventListener('change', updateHeader);
-      window.cancelAnimationFrame(frame);
-    };
-  }, []);
-  const isHome = pathname === '/';
-  const headerProgress = isHome ? scrollProgress : 1;
   const headerHeight = { xs: 64, md: 76 };
 
   return (
     <>
+      <Box component="header" sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 'appBar',
+        overflowAnchor: 'none',
+      }}>
       <Box sx={{ bgcolor: 'ink.main', color: 'ink.contrastText', fontSize: 14 }}>
         <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, py: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
@@ -94,23 +55,20 @@ export function SiteHeader() {
               {business.email}
             </Link>
           </Box>
-          <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, opacity: 0.8 }}>
-            {`${business.street}, ${business.city}, ${business.state}`}
-          </Box>
+          <Link component="a" href={business.mapsUrl} target="_blank" rel="noopener noreferrer" color="inherit" underline="hover" aria-label="Get directions to Fish World in Google Maps (opens in a new tab)" sx={{ display: { xs: 'none', md: 'block' }, opacity: 0.8 }}>
+            {`${business.street}, ${business.city}, ${business.state} ${business.zip}`}
+          </Link>
         </Container>
       </Box>
 
       <AppBar
-        position="sticky"
+        position="static"
         color="transparent"
         elevation={0}
-        style={{ '--header-progress': headerProgress } as CSSProperties}
         sx={{
           backgroundImage: 'none',
-          bgcolor: 'rgb(255 255 255 / var(--header-progress))',
-          color: 'color-mix(in srgb, #F3F7F8 calc((1 - var(--header-progress)) * 100%), #0B1C24)',
-          mb: isHome ? { xs: `-${headerHeight.xs}px`, md: `-${headerHeight.md}px` } : 0,
-          overflowAnchor: 'none',
+          bgcolor: 'ink.main',
+          color: 'ink.contrastText',
         }}
       >
         <Container>
@@ -120,10 +78,10 @@ export function SiteHeader() {
             sx={{
               minHeight: 0,
               height: headerHeight,
-              gap: 2,
+              gap: { xs: 1, md: 2 },
             }}
           >
-            <Logo darkOpacity={1 - headerProgress} />
+            <Logo dark />
             <Box sx={{ flexGrow: 1 }} />
             <Box component="nav" aria-label="Main" sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5 }}>
               {links.map((link) => {
@@ -135,8 +93,9 @@ export function SiteHeader() {
                     href={link.href}
                     aria-current={active ? 'page' : undefined}
                     sx={{
-                      color: active ? 'color-mix(in srgb, var(--mui-palette-secondary-light) calc((1 - var(--header-progress)) * 100%), var(--mui-palette-secondary-main))' : 'inherit',
-                      bgcolor: active ? 'rgb(var(--mui-palette-secondary-mainChannel) / 0.1)' : 'transparent',
+                      color: active ? 'secondary.light' : 'inherit',
+                      bgcolor: active ? 'rgba(63, 182, 217, 0.12)' : 'transparent',
+                      '&:hover': { bgcolor: 'rgba(63, 182, 217, 0.18)' },
                       px: 2,
                     }}
                   >
@@ -144,6 +103,17 @@ export function SiteHeader() {
                   </Button>
                 );
               })}
+              <Button
+                component="a"
+                href={FACEBOOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook (opens in a new tab)"
+                endIcon={<OpenInNewIcon sx={{ fontSize: '16px !important' }} />}
+                sx={{ color: 'inherit', px: 2, '&:hover': { bgcolor: 'rgba(63, 182, 217, 0.18)' } }}
+              >
+                Facebook
+              </Button>
             </Box>
             <Button component="a" href={phoneHref(business.phone)} variant="contained" color="primary" sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1 }}>
               Call the store
@@ -154,12 +124,13 @@ export function SiteHeader() {
           </Toolbar>
         </Container>
       </AppBar>
+      </Box>
 
       <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
-        <Box sx={{ width: 280, display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
+        <Box sx={{ width: 280, display: 'flex', flexDirection: 'column', height: '100%', p: 2, bgcolor: 'ink.main', color: 'ink.contrastText' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Logo />
-            <IconButton aria-label="Close menu" onClick={() => setOpen(false)}>
+            <Logo dark />
+            <IconButton color="inherit" aria-label="Close menu" onClick={() => setOpen(false)}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -171,11 +142,23 @@ export function SiteHeader() {
                 href={link.href}
                 selected={isActive(pathname, link.href)}
                 onClick={() => setOpen(false)}
-                sx={{ borderRadius: 2 }}
+                sx={{ borderRadius: 2, '&.Mui-selected': { bgcolor: 'rgba(63, 182, 217, 0.12)', color: 'secondary.light' }, '&:hover, &.Mui-selected:hover': { bgcolor: 'rgba(63, 182, 217, 0.18)' } }}
               >
                 <ListItemText primary={link.label} slotProps={{ primary: { sx: { fontWeight: 600 } } }} />
               </ListItemButton>
             ))}
+            <ListItemButton
+              component="a"
+              href={FACEBOOK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook (opens in a new tab)"
+              onClick={() => setOpen(false)}
+              sx={{ borderRadius: 2, '&:hover': { bgcolor: 'rgba(63, 182, 217, 0.18)' } }}
+            >
+              <ListItemText primary="Facebook" slotProps={{ primary: { sx: { fontWeight: 600 } } }} />
+              <OpenInNewIcon sx={{ fontSize: 16 }} />
+            </ListItemButton>
           </List>
           <Box sx={{ mt: 'auto' }}>
             <Button component="a" href={phoneHref(business.phone)} variant="contained" fullWidth size="large">
