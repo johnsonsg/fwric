@@ -9,6 +9,7 @@ import DashboardOutlined from '@mui/icons-material/DashboardOutlined';
 import ArticleOutlined from '@mui/icons-material/ArticleOutlined';
 import PaletteOutlined from '@mui/icons-material/PaletteOutlined';
 import PhotoLibraryOutlined from '@mui/icons-material/PhotoLibraryOutlined';
+import CollectionsOutlined from '@mui/icons-material/CollectionsOutlined';
 import StorefrontOutlined from '@mui/icons-material/StorefrontOutlined';
 import HistoryOutlined from '@mui/icons-material/HistoryOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -21,6 +22,7 @@ const navigation = [
   { href: '/admin/pages', label: 'Pages', Icon: ArticleOutlined },
   { href: '/admin/branding', label: 'Branding & logos', Icon: PaletteOutlined },
   { href: '/admin/media', label: 'Media library', Icon: PhotoLibraryOutlined },
+  { href: '/admin/gallery', label: 'Gallery', Icon: CollectionsOutlined },
   { href: '/admin/business', label: 'Business details', Icon: StorefrontOutlined },
   { href: '/admin/activity', label: 'Recent changes', Icon: HistoryOutlined },
 ];

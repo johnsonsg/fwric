@@ -9,7 +9,8 @@
     "lint": "eslint",
     "check:admin": "node scripts/check-admin.mjs",
     "check:content": "node scripts/check-content-store.mjs",
-    "check:editors": "node scripts/check-editor-ui.mjs"
+    "check:editors": "node scripts/check-editor-ui.mjs",
+    "check:gallery": "node scripts/check-gallery.mjs"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

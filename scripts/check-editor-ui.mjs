@@ -47,3 +47,28 @@ for (const target of ['branding', 'business', ...PAGE_SLUGS]) {
   client.clear();
   console.log('PASS rendered editor', target);
 }
+
+const { MediaLibrary } = load('src/components/admin/media-library.tsx');
+const { LivestockGallery } = load('src/components/site/livestock-gallery.tsx');
+const category = DEFAULT_CONTENT.pages.livestock.sections[0];
+const photo = { _id: 'test-photo', url: 'https://res.cloudinary.com/test/image/upload/v1/coral.jpg', name: 'coral.jpg', alt: 'Orange coral colony', category: category.id };
+const mediaClient = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
+mediaClient.setQueryData(['admin-media', '', 'library'], { pages: [{ assets: [photo], total: 201, nextPage: 2, configured: true, categories: [{ id: category.id, title: category.title }] }], pageParams: [1] });
+let markup = renderToStaticMarkup(React.createElement(QueryClientProvider, { client: mediaClient }, React.createElement(MediaLibrary)));
+for (const text of ['Drop your photos here', 'Choose photos', 'Upload destination', 'Edit gallery details', 'Load more photos', 'Showing 1 of 201', 'f_auto,q_auto,c_limit,w_480']) {
+  assert.ok(markup.includes(text), `media library should render ${text}`);
+}
+assert.ok(markup.includes('multiple=""'), 'photo picker should allow batch selection');
+mediaClient.setQueryData(['admin-media', '', ''], { pages: [{ assets: [photo], total: 1, nextPage: null, configured: true, categories: [{ id: category.id, title: category.title }] }], pageParams: [1] });
+markup = renderToStaticMarkup(React.createElement(QueryClientProvider, { client: mediaClient }, React.createElement(MediaLibrary, { galleryMode: true })));
+assert.ok(markup.includes('Livestock gallery category'), 'admin Gallery must use Livestock categories');
+assert.ok(markup.includes('Choose a category from your Livestock page'), 'gallery upload requires choosing a category');
+assert.ok(markup.includes('gallery photos'), 'admin Gallery should show gallery photos instead of site assets');
+mediaClient.setQueryData(['gallery', category.id], { pages: [{ assets: [photo], total: 25, nextPage: 2 }], pageParams: [1] });
+markup = renderToStaticMarkup(React.createElement(QueryClientProvider, { client: mediaClient }, React.createElement(LivestockGallery, { category: category.id, title: category.title })));
+for (const text of ['Enlarge Orange coral colony', 'Load more photos', 'f_auto,q_auto,c_limit,w_640']) assert.ok(markup.includes(text), `gallery should render ${text}`);
+mediaClient.setQueryData(['gallery', category.id], { pages: [{ assets: [], total: 0, nextPage: null }], pageParams: [1] });
+markup = renderToStaticMarkup(React.createElement(QueryClientProvider, { client: mediaClient }, React.createElement(LivestockGallery, { category: category.id, title: category.title })));
+assert.ok(markup.includes('New photos are coming soon'), 'empty galleries should show a useful message');
+mediaClient.clear();
+console.log('PASS rendered batch uploader, paginated library, populated gallery, and empty gallery.');

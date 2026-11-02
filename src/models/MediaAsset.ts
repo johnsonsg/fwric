@@ -5,6 +5,7 @@ const schema = new Schema({
   url: { type: String, required: true },
   name: { type: String, required: true },
   alt: { type: String, default: '' },
+  category: { type: String, default: '', index: true },
   width: Number, height: Number, bytes: Number, uploadedBy: String,
 }, { timestamps: true });
 

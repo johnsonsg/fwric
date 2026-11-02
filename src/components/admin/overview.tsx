@@ -22,6 +22,7 @@ export function AdminOverview() {
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>{[
       ['/admin/branding', 'Branding & logos', 'Preview the logo for light backgrounds and the logo for dark backgrounds before publishing.'],
       ['/admin/media', 'Your photo library', 'Upload and reuse photos, with image descriptions for accessibility.'],
+      ['/admin/gallery', 'Livestock galleries', 'Drag and drop photos into the categories on your Livestock page.'],
       ['/admin/business', 'Business details', 'Keep your phone, address, directions, and opening hours up to date everywhere.'],
       ['/admin/activity', 'Recent changes', 'See what changed, who saved it, and when it was published.'],
     ].map(([href, title, text]) => <Card variant="outlined" key={href} sx={{ p: 3, borderRadius: 3 }}><Typography variant="h6">{title}</Typography><Typography color="text.secondary" sx={{ my: 2 }}>{text}</Typography><Button component={NextLink} href={href} endIcon={<ArrowForward />}>Open {title.toLowerCase()}</Button></Card>)}</Box>

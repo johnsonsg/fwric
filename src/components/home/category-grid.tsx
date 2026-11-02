@@ -7,6 +7,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { useSiteContent } from '@/components/site/content-provider';
 import { SectionHeading } from './section-heading';
+import { galleryPath } from '@/lib/media';
 
 export function CategoryGrid() {
   const { pages } = useSiteContent();
@@ -32,7 +33,7 @@ export function CategoryGrid() {
             <Box
               key={section.id}
               component={NextLink}
-              href={`/livestock?category=${section.id}`}
+              href={galleryPath(section.id)}
               sx={{
                 position: 'relative',
                 overflow: 'hidden',

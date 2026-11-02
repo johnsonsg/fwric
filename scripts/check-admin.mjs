@@ -29,7 +29,7 @@ assert.ok([200, 302].includes(login.status), 'admin login should respond success
 const session = await (await request('/api/auth/session')).json();
 assert.equal(session.user?.role, 'admin', 'configured admin credentials should create an admin session');
 
-for (const path of ['/admin', '/admin/pages', ...['home', 'livestock', 'services', 'about', 'contact'].map((slug) => `/admin/pages/${slug}`), '/admin/branding', '/admin/business', '/admin/media', '/admin/activity']) {
+for (const path of ['/admin', '/admin/pages', ...['home', 'livestock', 'services', 'about', 'contact'].map((slug) => `/admin/pages/${slug}`), '/admin/branding', '/admin/business', '/admin/media', '/admin/gallery', '/admin/activity']) {
   const response = await request(path);
   assert.equal(response.status, 200, `${path} should render for an administrator`);
   const html = await response.text();

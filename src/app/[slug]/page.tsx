@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, CardActionArea, Container, Stack, Typography } from '@mui/material';
 import { SiteHeader } from '@/components/site/site-header';
 import { SiteFooter } from '@/components/site/site-footer';
 import { VisitSection } from '@/components/home/visit-section';
 import { getContentSnapshot } from '@/lib/content-store';
 import { isPageSlug, pagePath } from '@/lib/content';
+import { galleryPath } from '@/lib/media';
 
 type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ category?: string | string[] }> };
 export const dynamic = 'force-dynamic';
@@ -60,12 +61,21 @@ export default async function ContentPage({ params, searchParams }: Props) {
         </Stack>}
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
           {sections.map((section) => <Box component="article" key={section.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 3, overflow: 'hidden', bgcolor: 'background.paper' }}>
+            {slug === 'livestock' ? <CardActionArea href={galleryPath(section.id)} aria-label={`View ${section.title} gallery`} sx={{ height: '100%', display: 'block' }}>
+              {section.image && <Box sx={{ position: 'relative', aspectRatio: '4 / 3' }}><Image src={section.image} alt={section.imageAlt} fill unoptimized style={{ objectFit: 'cover' }} /></Box>}
+              <Box sx={{ p: 3 }}>
+                <Typography variant="h5" component="h3">{section.title}</Typography>
+                <Typography sx={{ mt: 2, color: 'text.secondary', whiteSpace: 'pre-line' }}>{section.body}</Typography>
+                <Typography sx={{ mt: 2, color: 'primary.main', fontWeight: 600 }}>View gallery →</Typography>
+              </Box>
+            </CardActionArea> : <>
             {section.image && <Box sx={{ position: 'relative', aspectRatio: '4 / 3' }}><Image src={section.image} alt={section.imageAlt} fill unoptimized style={{ objectFit: 'cover' }} /></Box>}
             <Box sx={{ p: 3 }}>
               <Typography variant="h5" component="h3">{section.title}</Typography>
               <Typography sx={{ mt: 2, color: 'text.secondary', whiteSpace: 'pre-line' }}>{section.body}</Typography>
               {section.linkLabel && <Button href={section.linkHref} sx={{ mt: 2 }}>{section.linkLabel}</Button>}
             </Box>
+            </>}
           </Box>)}
         </Box>
       </Container>}
