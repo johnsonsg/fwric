@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Alert, Box, Button, IconButton, LinearProgress, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import CloudUploadOutlined from '@mui/icons-material/CloudUploadOutlined';
 import Close from '@mui/icons-material/Close';
-import { prepareImage } from '@/lib/prepare-image';
+import { IMAGE_UPLOAD_ACCEPT, imageSelectionError, isHeicImage, prepareImage } from '@/lib/prepare-image';
 import { readJson, type MediaItem } from '@/lib/media';
 import { useAdminChanges } from './admin-shell';
 
@@ -47,8 +47,9 @@ export function MediaUpload({ categories, configured, onSelect, galleryCategory,
     if (runningRef.current) return;
     setSelectionError(''); setNotice('');
     if (files.length + photos.length > 250) { setSelectionError('Add up to 250 photos at a time. Upload this batch, then clear it to add more.'); return; }
-    const accepted = files.filter((file) => ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) && file.size > 0 && file.size <= 30 * 1024 * 1024);
-    if (accepted.length !== files.length) setSelectionError('Some files were skipped. Choose JPG, PNG, WebP, or GIF files up to 30 MB; export HEIC photos as JPG first.');
+    const accepted = files.filter((file) => !imageSelectionError(file));
+    const rejected = files.filter((file) => imageSelectionError(file));
+    if (rejected.length) setSelectionError(`${rejected[0].name}: ${imageSelectionError(rejected[0])}${rejected.length > 1 ? ` ${rejected.length - 1} other files were also skipped.` : ''}`);
     setPhotos((current) => [...current, ...accepted.map((file): QueuedPhoto => ({ id: crypto.randomUUID(), file, alt: '', status: 'ready' }))]);
   };
   const updatePhoto = (id: string, change: Partial<QueuedPhoto>) => setPhotos((current) => current.map((photo) => photo.id === id ? { ...photo, ...change } : photo));
@@ -96,10 +97,10 @@ export function MediaUpload({ categories, configured, onSelect, galleryCategory,
     >
       <CloudUploadOutlined sx={{ fontSize: 44, color: 'secondary.main', mb: 1 }} />
       <Typography variant="h6">Drop your photos here</Typography>
-      <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>Add one photo or a batch. Larger photos are automatically resized and compressed.</Typography>
+      <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>Add one photo or a batch. iPhone HEIC photos are converted automatically; larger photos are resized and compressed.</Typography>
       <Button variant="outlined" onClick={() => input.current?.click()} disabled={running || !configured}>Choose photos</Button>
-      <input ref={input} type="file" multiple hidden aria-label="Choose photos to upload" accept="image/jpeg,image/png,image/webp,image/gif" disabled={running || !configured} onChange={(event) => { addFiles(Array.from(event.target.files ?? [])); event.target.value = ''; }} />
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1.5 }}>JPG, PNG, WebP up to 30 MB each. Animated GIFs up to 4 MB.</Typography>
+      <input ref={input} type="file" multiple hidden aria-label="Choose photos to upload" accept={IMAGE_UPLOAD_ACCEPT} disabled={running || !configured} onChange={(event) => { addFiles(Array.from(event.target.files ?? [])); event.target.value = ''; }} />
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1.5 }}>JPG, PNG, WebP, HEIC/HEIF up to 30 MB each and 50 megapixels. Animated GIFs up to 4 MB.</Typography>
     </Box>
     {selectionError && <Alert severity="warning">{selectionError}</Alert>}
     {!!photos.length && <>
@@ -115,7 +116,7 @@ export function MediaUpload({ categories, configured, onSelect, galleryCategory,
             <IconButton size="small" aria-label={`Remove ${photo.file.name} from queue`} disabled={running} onClick={() => setPhotos((current) => current.filter(({ id }) => id !== photo.id))}><Close fontSize="small" /></IconButton>
           </Stack>
           <TextField label={`Description for ${photo.file.name}`} value={photo.alt} required disabled={running || photo.status === 'done'} slotProps={{ htmlInput: { maxLength: 1000 } }} onChange={(event) => updatePhoto(photo.id, { alt: event.target.value })} size="small" helperText="Describe the fish, coral, or scene for visitors using screen readers." />
-          <Typography variant="caption" color={photo.status === 'error' ? 'error' : 'text.secondary'} role="status" sx={{ display: 'block', mt: 1 }}>{photo.error ?? ({ ready: 'Ready to upload', processing: 'Optimizing photo…', uploading: 'Uploading…', done: 'Uploaded', error: 'Upload failed' }[photo.status])}</Typography>
+          <Typography variant="caption" color={photo.status === 'error' ? 'error' : 'text.secondary'} role="status" sx={{ display: 'block', mt: 1 }}>{photo.error ?? ({ ready: 'Ready to upload', processing: isHeicImage(photo.file) ? 'Converting and optimizing iPhone photo…' : 'Optimizing photo…', uploading: 'Uploading…', done: 'Uploaded', error: 'Upload failed' }[photo.status])}</Typography>
         </Box>)}
       </Stack></Box>
       {running && <LinearProgress aria-label="Batch upload progress" variant="determinate" value={photos.filter(({ status }) => status === 'done' || status === 'error').length / photos.length * 100} />}

@@ -59,6 +59,8 @@ for (const text of ['Drop your photos here', 'Choose photos', 'Upload destinatio
   assert.ok(markup.includes(text), `media library should render ${text}`);
 }
 assert.ok(markup.includes('multiple=""'), 'photo picker should allow batch selection');
+assert.ok(markup.includes('.heic,.heif,.hif'), 'photo picker must accept iPhone HEIC and HEIF files');
+assert.ok(markup.includes('iPhone HEIC photos are converted automatically'), 'uploader should explain automatic iPhone photo conversion');
 mediaClient.setQueryData(['admin-media', '', ''], { pages: [{ assets: [photo], total: 1, nextPage: null, configured: true, categories: [{ id: category.id, title: category.title }] }], pageParams: [1] });
 markup = renderToStaticMarkup(React.createElement(QueryClientProvider, { client: mediaClient }, React.createElement(MediaLibrary, { galleryMode: true })));
 assert.ok(markup.includes('Livestock gallery category'), 'admin Gallery must use Livestock categories');
